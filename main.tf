@@ -1,66 +1,26 @@
 provider "aws" {
-    region = "us-east-1"
+  region = "us-east-1"
+}
+
+module "network" {
+    source                 = "./modules/network"
+    vpc_cidr_block         = var.vpc_cidr_block
+    subnet_cidr_block      = var.subnet_cidr_block
+    internet_gateway_id    = module.network.internet_gateway_id
+    sg1_id                 = module.network.sg1_id
+    subnet_id              = module.network.subnet_id
+    environment            = var.environment
 }
 
 module "ec2_instance" {
-    source = "./modules/ec2_instance"
-    instance_type_value = "t2.micro"
-    ami_value = "ami-0e2c8caa4b6378d8c"
-    key_pair_value = "initial_keypair"
-    subnet_id = "subnet-08d06ba26ab2065ca"
-    vpc_security_group_ids = ["sg-02d8aa7055e502ede"]
-}
-
-output "public_ip" {
-    value = module.ec2_instance.public_ip
-}
-
-output "instance_id" {
-    value = module.ec2_instance.instance_id
-}
-
-output "availability_zone" {
-    value = module.ec2_instance.availability_zone
-}
-
-output "private_ip" {
-    value = module.ec2_instance.private_ip
-}
-
-output "public_dns" {
-    value = module.ec2_instance.public_dns
-}
-
-output "private_dns" {
-    value = module.ec2_instance.private_dns
-}
-
-output "security_group_id" {
-    value = module.ec2_instance.security_group_id
-}
-
-output "tags" {
-    value = module.ec2_instance.tags
-}
-
-output "instance_type" {
-    value = module.ec2_instance.instance_type
-}
-
-output "root_block_device" {
-    value = module.ec2_instance.root_block_device
-}
-
-output "ebs_block_device" {
-    value = module.ec2_instance.ebs_block_device
-}
-
-output "network_interface" {
-    value = module.ec2_instance.network_interface
-}
-
-output "source_dest_check" {
-    value = module.ec2_instance.source_dest_check
+  source                 = "./modules/ec2_instance"
+  instance_name          = var.instance_name
+  instance_type_value    = var.instance_type_value
+  ami_value              = var.ami_id
+  key_pair_value         = var.key_pair_value
+  subnet_id              = module.network.subnet_id
+  vpc_security_group_ids = module.network.sg1_id
+  environment            = var.environment
 }
 
 resource "random_id" "bucket_suffix" {
@@ -68,15 +28,10 @@ resource "random_id" "bucket_suffix" {
 }
 
 module "s3_bucket" {
-    source = "./modules/s3_bucket"
-    bucket_name = "sample-bucket-${random_id.bucket_suffix.hex}"
-    tags = {
-        Name = "test-bucket"
-        Environment = "test"
-    }
-  
-}
-
-output "bucket_name" {
-    value = module.s3_bucket.bucket_name
+  source          = "./modules/s3_bucket"
+  bucket_name     = "sample-bucket-${random_id.bucket_suffix.hex}"
+  tags = {
+    Name          = "test-bucket"
+    Environment   = "test"
+  }
 }

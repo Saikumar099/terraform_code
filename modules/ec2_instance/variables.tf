@@ -18,3 +18,10 @@ variable "vpc_security_group_ids" {
   description = "The security group IDs to use for the instance" 
 }
 
+variable "instance_name" {
+  description = "The name of the instance"
+}
+
+variable "environment" {
+  description = "The environment for the instance"  
+}

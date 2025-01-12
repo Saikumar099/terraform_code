@@ -25,15 +25,7 @@ output "private_dns" {
 output "security_group_id" {
     value = aws_instance.example_instance.security_groups
 }
-
-output "tags" {
-    value = aws_instance.example_instance.tags
-}
-
-output "instance_type" {
-    value = aws_instance.example_instance.instance_type
-}
-
+                
 output "root_block_device" {
     value = aws_instance.example_instance.root_block_device
 }
@@ -49,6 +41,7 @@ output "network_interface" {
 output "source_dest_check" {
     value = aws_instance.example_instance.source_dest_check
 }
+
 
 
 

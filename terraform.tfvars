@@ -1,2 +1,7 @@
-ami_id = "ami-0c55b159cbfafe1f0"
+ami_id              = "ami-0e2c8caa4b6378d8c"
 instance_type_value = "t2.micro"
+key_pair_value      = "initial_keypair"
+vpc_cidr_block      = "20.0.0.0/16"
+subnet_cidr_block   = "20.0.1.0/24"
+environment = "dev"
+instance_name = "app-server"
